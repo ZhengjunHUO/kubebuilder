@@ -1,0 +1,6 @@
+domain: huozj.io
+layout:
+- go.kubebuilder.io/v3
+projectName: kubebuilder
+repo: github.com/ZhengjunHUO/kubebuilder
+version: "3"
