@@ -20,7 +20,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // FufuSpec defines the desired state of Fufu
@@ -29,13 +28,22 @@ type FufuSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// Foo is an example field of Fufu. Edit fufu_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	Color  string         `json:"color,required"`
+	Weight string         `json:"weight,required"`
+	Age    int            `json:"age,required"`
+	Info   AdditionalInfo `json:"info,omitempty"`
+}
+
+type AdditionalInfo struct {
+	Breed      string `json:"breed,omitempty"`
+	Vaccinated bool   `json:"vaccinated,omitempty"`
 }
 
 // FufuStatus defines the observed state of Fufu
 type FufuStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+	LastPosition string `json:"lastPosition"`
 }
 
 //+kubebuilder:object:root=true
