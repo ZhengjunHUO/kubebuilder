@@ -1,0 +1,20 @@
+# permissions for end users to view fufus.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: fufu-viewer-role
+rules:
+- apiGroups:
+  - cat.huozj.io
+  resources:
+  - fufus
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - cat.huozj.io
+  resources:
+  - fufus/status
+  verbs:
+  - get
