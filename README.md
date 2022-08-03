@@ -1,8 +1,21 @@
 # kubebuilder
-// TODO(user): Add simple overview of use/purpose
+Use kubebuilder to build my own operator
 
 ## Description
-// TODO(user): An in-depth paragraph about your project and overview of use
+Preparation
+```sh
+# 初始化
+$ kubebuilder init --plugins go/v3 --domain huozj.io --license apache2 --owner "huo" --repo github.com/ZhengjunHUO/kubebuilder
+# 创建api
+$ kubebuilder create api --group cat --version v1alpha2 --kind Fufu
+# 自定义结构并重新生成code
+$ vim api/v1alpha2/fufu_types.go
+$ make
+# 生成对应manifests
+$ make manifests 
+# 安装crd (需要一个k8s cluster)
+$ make install
+```
 
 ## Getting Started
 You’ll need a Kubernetes cluster to run against. You can use [KIND](https://sigs.k8s.io/kind) to get a local cluster for testing, or run against a remote cluster.
