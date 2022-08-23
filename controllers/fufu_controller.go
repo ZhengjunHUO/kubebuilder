@@ -61,11 +61,11 @@ func (r *FufuReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 	}
 	loggr.Info(fmt.Sprintf("Get fufu: %+v", fufu.Spec))
 
-	/*
-		if err := r.updateDeploy(fufu, ctx); err != nil {
-			return ctrl.Result{}, err
-		}
+	if err := r.updateDeploy(fufu, ctx); err != nil {
+		return ctrl.Result{}, err
+	}
 
+	/*
 		if err := r.updateSvc(fufu, ctx); err != nil {
 			return ctrl.Result{}, err
 		}
