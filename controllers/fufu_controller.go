@@ -65,11 +65,11 @@ func (r *FufuReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		return ctrl.Result{}, err
 	}
 
-	/*
-		if err := r.updateSvc(fufu, ctx); err != nil {
-			return ctrl.Result{}, err
-		}
+	if err := r.updateSvc(fufu, ctx); err != nil {
+		return ctrl.Result{}, err
+	}
 
+	/*
 		if err := r.updateHpa(fufu, ctx); err != nil {
 			return ctrl.Result{}, err
 		}
