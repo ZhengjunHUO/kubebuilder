@@ -15,7 +15,14 @@ spec:
     singular: fufu
   scope: Namespaced
   versions:
-  - name: v1alpha2
+  - additionalPrinterColumns:
+    - jsonPath: .spec.color
+      name: Color
+      type: string
+    - jsonPath: .status.replicas
+      name: Replicas
+      type: string
+    name: v1alpha2
     schema:
       openAPIV3Schema:
         description: Fufu is the Schema for the fufus API

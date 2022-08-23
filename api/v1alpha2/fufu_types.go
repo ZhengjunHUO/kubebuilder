@@ -50,6 +50,8 @@ type FufuStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:printcolumn:name="Color",type=string,JSONPath=`.spec.color`
+//+kubebuilder:printcolumn:name="Replicas",type=string,JSONPath=`.status.replicas`
 
 // Fufu is the Schema for the fufus API
 type Fufu struct {
