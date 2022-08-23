@@ -45,7 +45,7 @@ type FufuStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	ExternalIP string `json:"externalIP,omitempty"`
-	Replicas   int    `json:"replicas,omitempty"`
+	Replicas   int32  `json:"replicas,omitempty"`
 }
 
 //+kubebuilder:object:root=true
