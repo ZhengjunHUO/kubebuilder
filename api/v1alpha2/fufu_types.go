@@ -43,7 +43,9 @@ type AdditionalInfo struct {
 type FufuStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	LastPosition string `json:"lastPosition"`
+
+	ExternalIP string `json:"externalIP,omitempty"`
+	Replicas   int    `json:"replicas,omitempty"`
 }
 
 //+kubebuilder:object:root=true

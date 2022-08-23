@@ -18,11 +18,16 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
+
+	appsv1 "k8s.io/api/apps/v1"
+	asv1 "k8s.io/api/autoscaling/v1"
+	corev1 "k8s.io/api/core/v1"
 
 	catv1alpha2 "github.com/ZhengjunHUO/kubebuilder/api/v1alpha2"
 )
@@ -47,10 +52,28 @@ type FufuReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.1/pkg/reconcile
 func (r *FufuReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	loggr := log.FromContext(ctx)
 
-	// TODO(user): your logic here
+	fufu := &catv1alpha2.Fufu{}
+	if err := r.Get(ctx, req.NamespacedName, fufu); err != nil {
+		err = client.IgnoreNotFound(err)
+		return ctrl.Result{}, err
+	}
+	loggr.Info(fmt.Sprintf("Get fufu: %+v", fufu.Spec))
 
+	/*
+		if err := r.updateDeploy(fufu, ctx); err != nil {
+			return ctrl.Result{}, err
+		}
+
+		if err := r.updateSvc(fufu, ctx); err != nil {
+			return ctrl.Result{}, err
+		}
+
+		if err := r.updateHpa(fufu, ctx); err != nil {
+			return ctrl.Result{}, err
+		}
+	*/
 	return ctrl.Result{}, nil
 }
 
@@ -58,5 +81,8 @@ func (r *FufuReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 func (r *FufuReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&catv1alpha2.Fufu{}).
+		Owns(&appsv1.Deployment{}).
+		Owns(&corev1.Service{}).
+		Owns(&asv1.HorizontalPodAutoscaler{}).
 		Complete(r)
 }
