@@ -2,7 +2,7 @@
 Use kubebuilder to build my own operator
 
 ## Description
-Preparation
+### Preparation
 ```sh
 # 初始化
 $ kubebuilder init --plugins go/v3 --domain huozj.io --license apache2 --owner "huo" --repo github.com/ZhengjunHUO/kubebuilder
@@ -15,6 +15,31 @@ $ make
 $ make manifests 
 # 安装crd (需要一个k8s cluster)
 $ make install
+```
+### Test
+```sh
+# Run the controller
+$ make run
+
+# In a new terminal, create a CR
+$ kubectl apply -f config/samples/cat_v1alpha2_fufu.yaml
+$ kubectl get fufu,pod,svc,hpa
+NAME                          COLOR    REPLICAS   EXTERNALIP
+fufu.cat.huozj.io/fufu-test   orange   2          172.18.0.101
+
+NAME                                    READY   STATUS    RESTARTS   AGE
+pod/fufu-test-deploy-76949c9d9d-2vdgx   1/1     Running   0          19s
+pod/fufu-test-deploy-76949c9d9d-ctj9z   1/1     Running   0          34s
+
+NAME                    TYPE           CLUSTER-IP    EXTERNAL-IP    PORT(S)        AGE
+service/fufu-test-svc   LoadBalancer   10.96.234.7   172.18.0.101   80:30277/TCP   34s
+
+NAME                                                REFERENCE                     TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/fufu-test-hpa   Deployment/fufu-test-deploy   <unknown>/60%   2         5         0          4s
+
+# Remove some resources and watch what happened
+$ k delete hpa fufu-test-hpa
+$ k delete deploy fufu-test-deploy
 ```
 
 ## Getting Started
