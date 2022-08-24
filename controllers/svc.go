@@ -23,6 +23,13 @@ func (r *FufuReconciler) updateSvc(fufu *catv1alpha2.Fufu, ctx context.Context) 
 
 	had := &corev1.Service{}
 	if err := r.Get(ctx, types.NamespacedName{Name: wanted.ObjectMeta.Name, Namespace: wanted.ObjectMeta.Namespace}, had); err == nil {
+		if len(had.Status.LoadBalancer.String()) > 0 && len(had.Status.LoadBalancer.Ingress) > 0 {
+			fufu.Status.ExternalIP = had.Status.LoadBalancer.Ingress[0].IP
+			if err = r.Status().Update(ctx, fufu); err != nil {
+				return err
+			}
+		}
+
 		if !equality.Semantic.DeepDerivative(wanted.Spec.Selector, had.Spec.Selector) {
 			loggr.Info("A diff was found, update svc ...")
 			ctrutil.SetControllerReference(fufu, wanted, r.Scheme)
