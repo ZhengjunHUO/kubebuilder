@@ -15,6 +15,9 @@ $ make
 $ make manifests 
 # 安装crd (需要一个k8s cluster)
 $ make install
+# Implement reconciling logic and test under controllers/
+# Code Test
+$ make test
 ```
 ### Test
 ```sh
