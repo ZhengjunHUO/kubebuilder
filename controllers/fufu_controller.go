@@ -21,6 +21,7 @@ import (
 	"fmt"
 
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -35,7 +36,8 @@ import (
 // FufuReconciler reconciles a Fufu object
 type FufuReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
+	Scheme   *runtime.Scheme
+	Recorder record.EventRecorder
 }
 
 //+kubebuilder:rbac:groups=cat.huozj.io,resources=fufus,verbs=get;list;watch;create;update;patch;delete
@@ -78,6 +80,8 @@ func (r *FufuReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *FufuReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	r.Recorder = mgr.GetEventRecorderFor("Fufu")
+
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&catv1alpha2.Fufu{}).
 		Owns(&appsv1.Deployment{}).

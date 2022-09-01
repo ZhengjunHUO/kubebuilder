@@ -30,8 +30,8 @@ func (r *FufuReconciler) updateDeploy(fufu *catv1alpha2.Fufu, ctx context.Contex
 			if err = r.Status().Update(ctx, fufu); err != nil {
 				return err
 			}
-			//r.Recorder.Eventf(fufu, corev1.EventTypeNormal, "replicas-updated", "Replicas updated to %d", had.Status.Replicas)
-			loggr.Info(fmt.Sprintf("Replicas updated to %d", had.Status.Replicas))
+			r.Recorder.Eventf(fufu, corev1.EventTypeNormal, "replicas-updated", "Replicas updated to %d", had.Status.Replicas)
+			//loggr.Info(fmt.Sprintf("Replicas updated to %d", had.Status.Replicas))
 		}
 
 		if !equality.Semantic.DeepDerivative(wanted.Spec, had.Spec) {
@@ -40,8 +40,8 @@ func (r *FufuReconciler) updateDeploy(fufu *catv1alpha2.Fufu, ctx context.Contex
 			if err = r.Update(ctx, wanted); err != nil {
 				return err
 			}
-			//r.Recorder.Event(fufu, corev1.EventTypeNormal, "deploy-updated", "Deployment updated")
-			loggr.Info("Deployment updated")
+			r.Recorder.Event(fufu, corev1.EventTypeNormal, "deploy-updated", "Deployment updated")
+			//loggr.Info("Deployment updated")
 		}
 
 		return nil
@@ -56,8 +56,8 @@ func (r *FufuReconciler) updateDeploy(fufu *catv1alpha2.Fufu, ctx context.Contex
 			loggr.Error(err, "failed to create deploy")
 		}
 
-		//r.Recorder.Event(fufu, corev1.EventTypeNormal, "deploy-created", "Deployment created")
-		loggr.Info("Deployment created")
+		r.Recorder.Event(fufu, corev1.EventTypeNormal, "deploy-created", "Deployment created")
+		//loggr.Info("Deployment created")
 		return nil
 	}
 }

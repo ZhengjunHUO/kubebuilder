@@ -36,8 +36,8 @@ func (r *FufuReconciler) updateSvc(fufu *catv1alpha2.Fufu, ctx context.Context) 
 			if err = r.Update(ctx, wanted); err != nil {
 				return err
 			}
-			//r.Recorder.Event(fufu, corev1.EventTypeNormal, "svc-updated", "Service updated")
-			loggr.Info("Service updated")
+			r.Recorder.Event(fufu, corev1.EventTypeNormal, "svc-updated", "Service updated")
+			//loggr.Info("Service updated")
 		}
 		return nil
 	} else {
@@ -51,8 +51,8 @@ func (r *FufuReconciler) updateSvc(fufu *catv1alpha2.Fufu, ctx context.Context) 
 			loggr.Error(err, "failed to create svc")
 		}
 
-		//r.Recorder.Event(fufu, corev1.EventTypeNormal, "svc-created", "Service created")
-		loggr.Info("Service created")
+		r.Recorder.Event(fufu, corev1.EventTypeNormal, "svc-created", "Service created")
+		//loggr.Info("Service created")
 		return nil
 	}
 }
