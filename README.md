@@ -25,8 +25,9 @@ $ make test
 $ make run
 
 # In a new terminal, create a CR
+$ kubectl create ns fufu
 $ kubectl apply -f config/samples/cat_v1alpha2_fufu.yaml
-$ kubectl get fufu,pod,svc,hpa
+$ kubectl get fufu,pod,svc,hpa -n fufu
 NAME                          COLOR    REPLICAS   EXTERNALIP
 fufu.cat.huozj.io/fufu-test   orange   2          172.18.0.101
 
@@ -41,8 +42,8 @@ NAME                                                REFERENCE                   
 horizontalpodautoscaler.autoscaling/fufu-test-hpa   Deployment/fufu-test-deploy   <unknown>/60%   2         5         0          4s
 
 # Remove some resources and watch what happened
-$ k delete hpa fufu-test-hpa
-$ k delete deploy fufu-test-deploy
+$ kubectl delete hpa fufu-test-hpa -n fufu
+$ kubectl delete deploy fufu-test-deploy -n fufu
 ```
 
 ## Getting Started
