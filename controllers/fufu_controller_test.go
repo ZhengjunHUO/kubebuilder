@@ -104,5 +104,71 @@ var _ = Describe("Test controller", func() {
 				Expect(hpa.ObjectMeta.OwnerReferences).To(ContainElement(expectedOwnerReference))
 			})
 		})
+
+		When("the service is up", func() {
+			var (
+				deploy appsv1.Deployment
+				svc    corev1.Service
+				hpa    asv1.HorizontalPodAutoscaler
+			)
+
+			BeforeEach(func() {
+				Eventually(func() error {
+					return k8sClient.Get(ctx, deployNsn, &deploy)
+				}, timeout, interval).Should(BeNil())
+
+				Eventually(func() error {
+					return k8sClient.Get(ctx, svcNsn, &svc)
+				}, timeout, interval).Should(BeNil())
+
+				Eventually(func() error {
+					return k8sClient.Get(ctx, hpaNsn, &hpa)
+				}, timeout, interval).Should(BeNil())
+			})
+
+			When("the deploy's replicas changed", func() {
+				const replicas = 3
+
+				BeforeEach(func() {
+					deploy.Status.Replicas = replicas
+					Expect(k8sClient.Status().Update(ctx, &deploy)).To(Succeed())
+				})
+
+				Specify("Replicas in Fufu's status changed", func() {
+					Eventually(func() bool {
+						fufu := &catv1alpha2.Fufu{}
+						if err := k8sClient.Get(ctx, nsn, fufu); err != nil {
+							return false
+						}
+						return fufu.Status.Replicas == replicas
+					}, timeout, interval).Should(BeTrue())
+				})
+			})
+
+			When("the svc's external ip changed", func() {
+				const extIP = "10.10.10.10"
+
+				BeforeEach(func() {
+					svc.Status.LoadBalancer = corev1.LoadBalancerStatus{
+						Ingress: []corev1.LoadBalancerIngress{
+							{
+								IP: extIP,
+							},
+						},
+					}
+					Expect(k8sClient.Status().Update(ctx, &svc)).To(Succeed())
+				})
+
+				Specify("ExternalIP in Fufu's status changed", func() {
+					Eventually(func() bool {
+						fufu := &catv1alpha2.Fufu{}
+						if err := k8sClient.Get(ctx, nsn, fufu); err != nil {
+							return false
+						}
+						return fufu.Status.ExternalIP == extIP
+					}, timeout, interval).Should(BeTrue())
+				})
+			})
+		})
 	})
 })
