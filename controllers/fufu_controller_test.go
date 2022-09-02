@@ -169,6 +169,93 @@ var _ = Describe("Test controller", func() {
 					}, timeout, interval).Should(BeTrue())
 				})
 			})
+
+			Context("Check deploy strategy", func() {
+				const (
+					originalStrategy = appsv1.RollingUpdateDeploymentStrategyType
+					modifiedStrategy = appsv1.RecreateDeploymentStrategyType
+				)
+
+				BeforeEach(func() {
+					Expect(deploy.Spec.Strategy.Type).To(Equal(originalStrategy))
+				})
+
+				When("deploy's strategy changed manually", func() {
+					BeforeEach(func() {
+						deploy.Spec.Strategy = appsv1.DeploymentStrategy{
+							Type: modifiedStrategy,
+						}
+						Expect(k8sClient.Update(ctx, &deploy)).To(Succeed())
+					})
+
+					It("deploy's strategy restored by controller", func() {
+						Eventually(func() bool {
+							d := &appsv1.Deployment{}
+							if err := k8sClient.Get(ctx, deployNsn, d); err != nil {
+								return false
+							}
+							return d.Spec.Strategy.Type == originalStrategy
+						}, timeout, interval).Should(BeTrue())
+
+					})
+				})
+			})
+
+			Context("Check service port", func() {
+				const (
+					originalPort int32 = 80
+					modifiedPort int32 = 8000
+				)
+
+				BeforeEach(func() {
+					Expect(svc.Spec.Ports[0].Port).To(Equal(originalPort))
+				})
+
+				When("service port changed manually", func() {
+					BeforeEach(func() {
+						svc.Spec.Ports[0].Port = modifiedPort
+						Expect(k8sClient.Update(ctx, &svc)).To(Succeed())
+					})
+
+					It("service port restored by controller", func() {
+						Eventually(func() bool {
+							s := &corev1.Service{}
+							if err := k8sClient.Get(ctx, svcNsn, s); err != nil {
+								return false
+							}
+							return s.Spec.Ports[0].Port == originalPort
+						}, timeout, interval).Should(BeTrue())
+					})
+				})
+			})
+
+			Context("Check hpa's replica", func() {
+				var (
+					originalMinRep int32 = 2
+					modifiedMinRep int32 = 3
+				)
+
+				BeforeEach(func() {
+					Expect(*hpa.Spec.MinReplicas).To(Equal(originalMinRep))
+				})
+
+				When("hpa's replica changed manually", func() {
+					BeforeEach(func() {
+						hpa.Spec.MinReplicas = &modifiedMinRep
+						Expect(k8sClient.Update(ctx, &hpa)).To(Succeed())
+					})
+
+					It("hpa's replica restored by controller", func() {
+						Eventually(func() bool {
+							h := &asv1.HorizontalPodAutoscaler{}
+							if err := k8sClient.Get(ctx, hpaNsn, h); err != nil {
+								return false
+							}
+							return *h.Spec.MinReplicas == originalMinRep
+						}, timeout, interval).Should(BeTrue())
+					})
+				})
+			})
 		})
 	})
 })
