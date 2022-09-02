@@ -30,7 +30,7 @@ func (r *FufuReconciler) updateSvc(fufu *catv1alpha2.Fufu, ctx context.Context) 
 			}
 		}
 
-		if !equality.Semantic.DeepDerivative(wanted.Spec.Selector, had.Spec.Selector) {
+		if !equality.Semantic.DeepDerivative(wanted.Spec.Selector, had.Spec.Selector) || !equality.Semantic.DeepDerivative(wanted.Spec.Ports[0].Port, had.Spec.Ports[0].Port) {
 			loggr.Info("A diff was found, update svc ...")
 			ctrutil.SetControllerReference(fufu, wanted, r.Scheme)
 			if err = r.Update(ctx, wanted); err != nil {

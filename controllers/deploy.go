@@ -75,6 +75,9 @@ func (r *FufuReconciler) createDeploy(fufu *catv1alpha2.Fufu) *appsv1.Deployment
 			Namespace: fufu.Namespace,
 		},
 		Spec: appsv1.DeploymentSpec{
+			Strategy: appsv1.DeploymentStrategy{
+				Type: appsv1.RollingUpdateDeploymentStrategyType,
+			},
 			Selector: &metav1.LabelSelector{
 				MatchLabels: labels,
 			},
