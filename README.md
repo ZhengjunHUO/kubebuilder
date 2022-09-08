@@ -20,6 +20,7 @@ $ make install
 $ make test
 ```
 ### Test
+About how suite test works, look at [here](https://github.com/kubernetes-sigs/kubebuilder/blob/master/docs/book/src/cronjob-tutorial/testdata/project/controllers/suite_test.go) 
 ```sh
 # Run the controller
 $ make run
