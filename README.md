@@ -1,4 +1,5 @@
 # kubebuilder
+![Coverage](https://img.shields.io/badge/Coverage-87.4%25-brightgreen)
 Use kubebuilder to build my own operator
 
 ## Description
