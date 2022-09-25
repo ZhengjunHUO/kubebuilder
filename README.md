@@ -1,5 +1,5 @@
 # kubebuilder
-![Coverage](https://img.shields.io/badge/Coverage-85.3%25-brightgreen)
+![Coverage](https://img.shields.io/badge/Coverage-87.4%25-brightgreen)
 
 ## Description
 ### Preparation
